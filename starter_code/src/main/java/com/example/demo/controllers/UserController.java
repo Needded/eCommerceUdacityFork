@@ -47,6 +47,7 @@ public class UserController {
 	public ResponseEntity<User> findByUserName(@PathVariable String username) {
 		log.info("Finding user by username '{}'", username);
 
+
 		User user = userRepository.findByUsername(username);
 		if (user == null) {
 			log.error("Invalid username. Failed to retrieve user '{}'", username);

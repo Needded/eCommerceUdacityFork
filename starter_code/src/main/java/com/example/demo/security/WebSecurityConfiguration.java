@@ -45,8 +45,8 @@ public class WebSecurityConfiguration {
                             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                         })
                 )
-                .addFilter(new JWTAuthenticationVerificationFilter(authenticationManager(authenticationConfiguration), userDetailsService))
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(authenticationConfiguration)))
+                .addFilterBefore(new JWTAuthenticationVerificationFilter(authenticationManager(authenticationConfiguration), userDetailsService), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
