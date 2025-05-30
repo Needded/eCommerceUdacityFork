@@ -5,8 +5,8 @@ import com.example.demo.model.persistence.User;
 import com.example.demo.model.persistence.repositories.CartRepository;
 import com.example.demo.model.persistence.repositories.UserRepository;
 import com.example.demo.model.requests.CreateUserRequest;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,15 +35,10 @@ public class UserControllerTest {
     private UserRepository userRepo;
 
     @Mock
-    private CartRepository cartRepo;
+    private CartRepository cartRepository;
 
     @Mock
     private BCryptPasswordEncoder encoder;
-
-    @BeforeEach
-    void setup() {
-        userController = new UserController(encoder,userRepo, cartRepo);
-    }
 
     @Test
     public void createUserHappyPath() {

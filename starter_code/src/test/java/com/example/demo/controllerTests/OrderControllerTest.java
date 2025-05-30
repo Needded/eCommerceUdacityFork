@@ -91,7 +91,6 @@ public class OrderControllerTest {
     @Test
     public void testGetOrdersForUser() {
         when(userRepo.findByUsername("test")).thenReturn(user);
-        // Simula lista vazia de pedidos
         when(orderRepo.findByUser(user)).thenReturn(new ArrayList<>());
 
         ResponseEntity<List<UserOrder>> response = orderController.getOrdersForUser("test");

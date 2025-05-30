@@ -1,12 +1,15 @@
 package com.example.demo.securityTests;
 
 import com.example.demo.model.persistence.User;
+import com.example.demo.model.persistence.repositories.CartRepository;
 import com.example.demo.model.persistence.repositories.UserRepository;
 import com.example.demo.security.UserDetailsServiceImpl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,6 +20,7 @@ import java.util.Collection;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class UserDetailsServiceImplementorTest {
 
     @InjectMocks
@@ -58,7 +62,7 @@ public class UserDetailsServiceImplementorTest {
 
     @Test
     public void testLoadUserByUsername_NullUsername() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(UsernameNotFoundException.class, () -> {
             userDetailsService.loadUserByUsername(null);
         });
     }

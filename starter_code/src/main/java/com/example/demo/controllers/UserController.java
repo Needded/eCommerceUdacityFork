@@ -57,28 +57,34 @@ public class UserController {
 		log.info("Successfully retrieved user '{}'", username);
 		return ResponseEntity.ok(user);
 	}
-	
+
 	@PostMapping("/create")
 	public ResponseEntity<User> createUser(@RequestBody CreateUserRequest createUserRequest) {
-		log.info("Creating user '{}'", createUserRequest.getUsername());
+		log.info("CreateUser request received for username '{}'", createUserRequest.getUsername());
 
-		User user = new User();
-		user.setUsername(createUserRequest.getUsername());
-		Cart cart = new Cart();
-		cartRepository.save(cart);
-		user.setCart(cart);
+		try {
+			User user = new User();
+			user.setUsername(createUserRequest.getUsername());
+			Cart cart = new Cart();
+			cartRepository.save(cart);
+			user.setCart(cart);
 
-		String password = createUserRequest.getPassword();
-		if (password == null || password.length() < 7 || !password.equals(createUserRequest.getConfirmPassword())) {
-			log.error("Invalid password. Failed to create user '{}'", user.getUsername());
-			return ResponseEntity.badRequest().build();
+			String password = createUserRequest.getPassword();
+			if (password == null || password.length() < 7 || !password.equals(createUserRequest.getConfirmPassword())) {
+				log.error("CreateUser request failed: Invalid password for username '{}'", user.getUsername());
+				return ResponseEntity.badRequest().build();
+			}
+
+			user.setPassword(bCryptPasswordEncoder.encode(createUserRequest.getPassword()));
+			userRepository.save(user);
+
+			log.info("CreateUser request successful for username '{}'", user.getUsername());
+			return ResponseEntity.ok(user);
+
+		} catch (Exception e) {
+			log.error("Exception occurred while creating user '{}': {}", createUserRequest.getUsername(), e.getMessage(), e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-
-		user.setPassword(bCryptPasswordEncoder.encode(createUserRequest.getPassword()));
-		userRepository.save(user);
-
-		log.info("User '{}' was successfully created", user.getUsername());
-		return ResponseEntity.ok(user);
 	}
-	
+
 }
